@@ -4,9 +4,10 @@ session_start();
 
 if (!isset ($_SESSION['login'])) {
     header("location: index.php");
-}else{
-    $login=$_SESSION['login'];
-    $satut=$_SESSION['statut'];
+    //Si une personne non connecter essaie d'acceder a la page il est renvoyé vers index.php
+}elseif ($_SESSION['statut']=="Technicien") {
+    header("location: accueil_T.php");
+    //Si un technicien essaie d'acceder aux page assistant il est renvoyé vers la page technicien
 }
 
 
