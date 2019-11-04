@@ -19,82 +19,92 @@
 
     //réaffiche la liste lorsqu'on ne met pas de N°Client
     if(!($_POST['recherche'])){
-      $req = "SELECT * FROM client";
-      $resultClient=mysqli_query($bdd,$req);   
+      $resultClient= null;   
     }
 
-  }elseif(!isset($_POST['submitRecherche'])){
-    $req = "SELECT * FROM client";
-    $resultClient=mysqli_query($bdd,$req);   
+  }
+
+  if (isset($_POST['submitModal']) AND $_POST['prenom']){
+    $req = "UPDATE `client` SET `prenom`= \"".$_POST['prenom']."\" WHERE numero_client =".$_SESSION['numero_client'];
+    $resultRaisonSociale=mysqli_query($bdd,$req);
+    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
+    $resultClient=mysqli_query($bdd,$reqRefresh); 
+  }
+
+  if (isset($_POST['submitModal']) AND $_POST['nom']){
+    $req = "UPDATE `client` SET `nom`= \"".$_POST['nom']."\" WHERE numero_client =".$_SESSION['numero_client'];
+    $resultRaisonSociale=mysqli_query($bdd,$req);
+    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
+    $resultClient=mysqli_query($bdd,$reqRefresh); 
   }
 
   if (isset($_POST['submitModal']) AND $_POST['raison_sociale']){
     $req = "UPDATE `client` SET `raison_sociale`= \"".$_POST['raison_sociale']."\" WHERE numero_client =".$_SESSION['numero_client'];
     $resultRaisonSociale=mysqli_query($bdd,$req);
-    $reqRefresh = "SELECT * FROM client";
+    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
     $resultClient=mysqli_query($bdd,$reqRefresh); 
   }
 
   if (isset($_POST['submitModal']) AND  $_POST['siren']){
     $req = "UPDATE `client` SET `siren`= \"".$_POST['siren']."\" WHERE numero_client =".$_SESSION['numero_client'];
     $resultSiren=mysqli_query($bdd,$req);
-    $reqRefresh = "SELECT * FROM client";
+    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
     $resultClient=mysqli_query($bdd,$reqRefresh);   
   }
 
   if (isset($_POST['submitModal']) AND $_POST['code_ape']){ 
     $req = "UPDATE `client` SET `code_APE`= \"".$_POST['code_ape']."\" WHERE numero_client =".$_SESSION['numero_client'];
     $resultCodeAPE=mysqli_query($bdd,$req);
-    $reqRefresh = "SELECT * FROM client";
+    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
     $resultClient=mysqli_query($bdd,$reqRefresh);   
   }
 
   if (isset($_POST['submitModal']) AND $_POST['adresse']){ 
     $req = "UPDATE `client` SET `adresse`= \"".$_POST['adresse']."\" WHERE numero_client =".$_SESSION['numero_client'];
     $resultAdresse=mysqli_query($bdd,$req);
-    $reqRefresh = "SELECT * FROM client";
+    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
     $resultClient=mysqli_query($bdd,$reqRefresh);   
   }
 
   if (isset($_POST['submitModal']) AND $_POST['telephone']){ 
     $req = "UPDATE `client` SET `telephone`= \"".$_POST['telephone']."\" WHERE numero_client =".$_SESSION['numero_client'];
     $resultTelepone=mysqli_query($bdd,$req);
-    $reqRefresh = "SELECT * FROM client";
+    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
     $resultClient=mysqli_query($bdd,$reqRefresh);   
   }
 
   if (isset($_POST['submitModal']) AND $_POST['fax']){ 
     $req = "UPDATE `client` SET `fax`= \"".$_POST['fax']."\" WHERE numero_client =".$_SESSION['numero_client'];
     $resultFax=mysqli_query($bdd,$req);
-    $reqRefresh = "SELECT * FROM client";
+    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
     $resultClient=mysqli_query($bdd,$reqRefresh);   
   }
 
   if (isset($_POST['submitModal']) AND $_POST['email']){ 
     $req = "UPDATE `client` SET `email`= \"".$_POST['email']."\" WHERE numero_client =".$_SESSION['numero_client'];
     $resultEmail=mysqli_query($bdd,$req);
-    $reqRefresh = "SELECT * FROM client";
+    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
     $resultClient=mysqli_query($bdd,$reqRefresh);   
   }
 
   if (isset($_POST['submitModal']) AND $_POST['duree_deplacement']){ 
     $req = "UPDATE `client` SET `duree_deplacement`= \"".$_POST['duree_deplacement']."\" WHERE numero_client =".$_SESSION['numero_client'];
     $resultDureeDeplacement=mysqli_query($bdd,$req);
-    $reqRefresh = "SELECT * FROM client";
+    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
     $resultClient=mysqli_query($bdd,$reqRefresh);   
   }
 
   if (isset($_POST['submitModal']) AND $_POST['distance_km']){ 
     $req = "UPDATE `client` SET `distance_km`= \"".$_POST['distance_km']."\" WHERE numero_client =".$_SESSION['numero_client'];
     $resultDistanceKM=mysqli_query($bdd,$req);
-    $reqRefresh = "SELECT * FROM client";
+    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
     $resultClient=mysqli_query($bdd,$reqRefresh);   
   }
 
   if (isset($_POST['submitModal']) AND $_POST['numero_agence']){ 
     $req = "UPDATE `client` SET `numero_agence`= \"".$_POST['numero_agence']."\" WHERE numero_client =".$_SESSION['numero_client'];
     $resultDistanceKM=mysqli_query($bdd,$req);
-    $reqRefresh = "SELECT * FROM client";
+    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
     $resultClient=mysqli_query($bdd,$reqRefresh);   
   }
 
@@ -105,64 +115,47 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Ca$hCa$h</title>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<body>
-  <u><h1 style="text-align: center;">Rechercher un Client</h1></u>
+	<head>
+		<title>Ca$hCa$h</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	</head>
+	<body>
+		<u><h1 style="text-align: center;">Rechercher un Client</h1></u>
 
-  <form method="post" action="">
-    <input type="text" name="recherche" placeholder="n°Client">
-    <input type="submit" name="submitRecherche" class="" value="Valider">
-  </form>
+		<form method="post" action="">
+  		<input type="text" name="recherche" placeholder="n°Client">
+  		<input type="submit" name="submitRecherche" class="" value="Valider">
+		</form>
 
-  <br/>
-  <div align="center">
-    <table class="table-bordered">
-      <thead> 
-        <tr> 
-          <th scope="col">n°Client</th> 
-          <th scope="col">Raison sociale</th> 
-          <th scope="col">Siren</th> 
-          <th scope="col">Code APE</th> 
-          <th scope="col">Adresse</th>
-          <th scope="col">Telephone</th>
-          <th scope="col">Fax</th>
-          <th scope="col">Email</th>
-          <th scope="col">Duree deplacement</th>
-          <th scope="col">Distance km</th>
-          <th scope="col">n°Agence</th>
-        </tr> 
-      </thead> 
+	<br/>
+	
+	<div>
+		  <?php
+          if(($_POST['recherche'])){
+              $affiche = $resultClient->fetch_array(MYSQLI_ASSOC);
+		  ?>
 
-      <?php
-        while($affiche = $resultClient->fetch_array(MYSQLI_ASSOC))
-        {
+			<p>N°Client: <?php echo $affiche['numero_client']; ?></p>
+      <p>Prénom: <?php echo $affiche['prenom']; ?></p>
+      <p>Nom: <?php echo $affiche['nom']; ?></p>
+			<p>Raison sociale: <?php echo $affiche['raison_sociale']; ?> </p>
+			<p>Siren: <?php echo $affiche['siren']; ?></p>
+			<p>Code APE: <?php echo $affiche['code_APE']; ?></p>
+			<p>Adresse: <?php echo $affiche['adresse']; ?></p>
+			<p>Téléphone: <?php echo $affiche['telephone']; ?></p>
+			<p>Fax: <?php echo $affiche['fax']; ?></p>
+			<p>Email: <?php echo $affiche['email']; ?></p>
+			<p>Durée de déplacement: <?php echo $affiche['duree_deplacement']; ?></p>
+			<p>Distance km:<?php echo $affiche['distance_km']; ?></p>
+			<p>N°Agence: <?php echo $affiche['numero_agence']; ?></p>
+      <?php 
+       }else{
+        echo "Aucun numéro client saisie !";
+       }
       ?>
-
-      <tr>
-        <td><?php echo $affiche['numero_client']; ?></td>
-        <td><?php echo $affiche['raison_sociale']; ?></td>
-        <td><?php echo $affiche['siren']; ?></td>
-        <td><?php echo $affiche['code_APE']; ?></td>
-        <td><?php echo $affiche['adresse']; ?></td>
-        <td><?php echo $affiche['telephone']; ?></td>
-        <td><?php echo $affiche['fax']; ?></td>
-        <td><?php echo $affiche['email']; ?></td>
-        <td><?php echo $affiche['duree_deplacement']; ?></td>
-        <td><?php echo $affiche['distance_km']; ?></td>
-        <td><?php echo $affiche['numero_agence']; ?></td>
-      </tr>
-
-      <?php
-        }
-      ?>
-
-    </table>
-  </div>
-
+	</div>
+	
   <form method="post" action =""> 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -176,6 +169,8 @@
           <div class="modal-body" >
 
           <lo>
+            <li><input type="text" name="prenom" placeholder="Prénom"></li>
+            <li><input type="text" name="nom" placeholder="Nom"></li>            
             <li><input type="text" name="raison_sociale" placeholder="Raison sociale"></li>
             <li><input type="text" name="siren" placeholder="Siren"></li>
             <li><input type="text" name="code_ape" placeholder="Code APE"></li>
