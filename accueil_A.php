@@ -1,24 +1,22 @@
 <?php  
-
-  session_start();
-
+session_start();
   if (!isset ($_SESSION['login'])) {
-      header("location: index.php");
-      //Si une personne non connecter essaie d'acceder a la page il est renvoyé vers index.php
-  }elseif ($_SESSION['statut']=="Technicien") {
-      header("location: accueil_T.php");
-      //Si un technicien essaie d'acceder aux page assistant il est renvoyé vers la page technicien
+    header("location: index.php");
+    //Si une personne non connecter essaie d'acceder a la page il est renvoyé vers index.php
+  }elseif ($_SESSION['statut']=="technicien") {
+    header("location: accueil_A.php");
+    //Si un assistant essaie d'acceder aux page technicien il est renvoyé vers la page assistant
   }
 
-  $c = new PDO('mysql:host=localhost;dbname=ppe','root');
-  $recherche = $_SESSION['login'];
-  $reqMatricule = $c->prepare('SELECT nom , prenom  FROM utilisateur, assistant Where login = ?');
-  $reqMatricule->execute(array($recherche));
-  $affiche = $reqMatricule->fetch();
+  $bdd = mysqli_connect("localhost","root","","ppe");
+  $nomA = "SELECT nom , prenom FROM utilisateur, assistant Where assistant.matricule = utilisateur.matricule and login =\"".$_SESSION['login']."\"";
+  $reqNom = mysqli_query($bdd,$nomA);
+  $affiche = $reqNom->fetch_array(MYSQLI_ASSOC);
 
   //inclusion de la connexion à la base de données
   include_once 'db_connect.php';
   //echo (mysqli_error($connexion_a_la_bdd));
+
 ?>
 
 <!DOCTYPE html>

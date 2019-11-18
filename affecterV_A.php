@@ -15,9 +15,11 @@
   if(isset($_POST['numClient']) and isset($_POST['submitAffecter'])){
     $numClient = $_POST['numClient'];
     $_SESSION['numClient'] = $numClient;
-    $ReqCodeRegAssis = "SELECT assistant.code_region FROM assistant, utilisateur WHERE  utilisateur.login = \"".$_SESSION['login']."\"";
+    
+    $ReqCodeRegAssis = "SELECT assistant.code_region FROM assistant, utilisateur WHERE utilisateur.login = \"".$_SESSION['login']."\"";
     $ResultCodeRegAssis = mysqli_query($bdd,$ReqCodeRegAssis);
     $CodeRegAssis = $ResultCodeRegAssis->fetch_array(MYSQLI_ASSOC);
+
     $reqNomT = "SELECT technicien.nom, technicien.prenom FROM technicien, client, agence, assistant WHERE numero_client =\"".$numClient."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\"";
     $resultNomT = mysqli_query($bdd,$reqNomT);
   }

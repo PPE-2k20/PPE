@@ -10,11 +10,11 @@
 
   $bdd = mysqli_connect("localhost","root","","ppe");
 
-  $ReqCodeRegAssis = "SELECT assistant.code_region FROM assistant, utilisateur WHERE  utilisateur.login = \"".$_SESSION['login']."\"";
+  $ReqCodeRegAssis = "SELECT assistant.code_region FROM assistant, utilisateur WHERE assistant.matricule = utilisateur.matricule and utilisateur.login = \"".$_SESSION['login']."\"";
   $ResultCodeRegAssis = mysqli_query($bdd,$ReqCodeRegAssis);
   $CodeRegAssis = $ResultCodeRegAssis->fetch_array(MYSQLI_ASSOC);
 
-  $reqTechnicien = "SELECT technicien.nom, technicien.prenom FROM technicien, agence, assistant WHERE assistant.code_region = \"".$CodeRegAssis['code_region']."\"";
+  $reqTechnicien= "SELECT technicien.nom, technicien.prenom FROM technicien, agence, assistant WHERE assistant.code_region = agence.code_region and technicien.numero_agence = agence.numero_agence and assistant.code_region = \"".$CodeRegAssis['code_region']."\"";
   $resultTechnicien = mysqli_query($bdd,$reqTechnicien);
 
   if(isset($_POST['submitRechercheInter'])){  
@@ -23,22 +23,22 @@
       $nom_technicien = $infoTech[0];
       $prenom_technicien = $infoTech[1];
 
-      $reqMatTechnicien = "SELECT technicien.matricule FROM technicien, agence, assistant WHERE technicien.prenom =\"".$prenom_technicien."\" and  technicien.nom =\"".$nom_technicien."\"";
+      $reqMatTechnicien = "SELECT matricule FROM technicien WHERE prenom =\"".$prenom_technicien."\" and  nom =\"".$nom_technicien."\"";
       $resultMatTechnicien = mysqli_query($bdd,$reqMatTechnicien);
       $matT = $resultMatTechnicien ->fetch_array(MYSQLI_ASSOC);
 
       if($_POST['dateInter']!=""){
-        $reqInterv = "SELECT DISTINCT intervention.* FROM intervention, client, technicien, assistant, agence WHERE intervention.validation = 0 and intervention.matricule_technicien=\"".$matT['matricule']."\" and intervention.date_visite = \"".$_POST['dateInter']."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\" ORDER BY intervention.numero_intervention asc";
+        $reqInterv = "SELECT intervention.*, client.nom, client.prenom FROM intervention, client, technicien, assistant, agence WHERE client.numero_client = intervention.numero_client and intervention.matricule_technicien=technicien.matricule and technicien.numero_agence = agence.numero_agence and agence.code_region= assistant.code_region and intervention.validation = 0 and intervention.matricule_technicien=\"".$matT['matricule']."\" and intervention.date_visite = \"".$_POST['dateInter']."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\" ORDER BY intervention.numero_intervention asc";
         $resultReqInterv = mysqli_query($bdd,$reqInterv);
       }
 
       if($_POST['dateInter']==""){
-        $reqInterv = "SELECT DISTINCT intervention.* FROM intervention, client, technicien, assistant, agence WHERE intervention.validation = 0 and  intervention.matricule_technicien=\"".$matT['matricule']."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\" ORDER BY intervention.numero_intervention asc";
+        $reqInterv = "SELECT intervention.*, client.nom, client.prenom FROM intervention,client, technicien, assistant, agence WHERE client.numero_client = intervention.numero_client and intervention.matricule_technicien=technicien.matricule and technicien.numero_agence = agence.numero_agence and agence.code_region= assistant.code_region and intervention.validation = 0 and  intervention.matricule_technicien=\"".$matT['matricule']."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\" ORDER BY intervention.numero_intervention asc";
         $resultReqInterv = mysqli_query($bdd,$reqInterv);
       }
 
     }else if($_POST['rechercheT']=="" and $_POST['dateInter']!=""){
-      $reqInterv = "SELECT DISTINCT intervention.* FROM intervention, client, technicien, assistant, agence WHERE intervention.validation = 0 and intervention.numero_client = 1 and  intervention.date_visite = \"".$_POST['dateInter']."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\" ORDER BY intervention.numero_intervention asc";
+      $reqInterv = "SELECT intervention.*, client.nom, client.prenom FROM intervention, client, technicien, assistant, agence WHERE client.numero_client = intervention.numero_client and intervention.matricule_technicien=technicien.matricule and technicien.numero_agence = agence.numero_agence and agence.code_region= assistant.code_region and intervention.validation = 0 and  intervention.date_visite = \"".$_POST['dateInter']."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\" ORDER BY intervention.numero_intervention asc";
       $resultReqInterv = mysqli_query($bdd,$reqInterv);
     }
   }
@@ -59,6 +59,7 @@
     <u><h1 style="text-align: center;">Consulter les interventions</h1></u>
 
     <form method="post" action="" autocomplete="off">
+      <!--<?php #echo $reqInterv ?>-->
       <select name="rechercheT" id="rechercheT">
         <option value="">--Choisir un technicien--</option>
         <?php while ($afficheT = $resultTechnicien -> fetch_array(MYSQLI_ASSOC)){?>
@@ -71,7 +72,7 @@
 
     <select multiple class="form-control col-6" size = 5  name = "liste_inter" id = "search">
       <?php while($affiche = $resultReqInterv -> fetch_array(MYSQLI_ASSOC)){?>
-      <option><?php echo $affiche['numero_intervention']." | ".$affiche['date_visite']." | ".$affiche['heure_visite']." | ".$affiche['numero_client']?></option>
+      <option><?php echo $affiche['numero_intervention']." | ".$affiche['date_visite']." | ".$affiche['heure_visite']." | ".$affiche['nom']." ".$affiche['prenom']?></option>
       <?php } ?>
     </select>
 
