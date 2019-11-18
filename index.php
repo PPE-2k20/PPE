@@ -1,7 +1,7 @@
 <?php
-include_once 'db_connect.php';
+	include_once 'db_connect.php';
 
-$error = isset($_GET['error'])?$_GET['error']:"";
+	$error = isset($_GET['error'])?$_GET['error']:"";
 ?>
 <!DOCTYPE html>
 <html>
