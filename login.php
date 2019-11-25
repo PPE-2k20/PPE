@@ -7,6 +7,11 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
+<script type="text/javascript">
+					setTimeout(function() {
+				    $('#mydiv').fadeOut('slow');
+				}, 2000);
+</script>
 
 <!DOCTYPE html>
 <html>
@@ -53,10 +58,11 @@
 				   </div>
 					</form>
 				</div>
-				<!--<div class="offset-md-2 col-9">
-					<span class="text-danger" style=""><?php #if (isset($error)) { echo utf8_encode($error); } ?></span></div>
-				</div>-->
+				<div class="offset-md-2 col-9" id="mydiv">
+					<span class="text-white" style=""><strong><?php if (isset($error)) { echo utf8_encode($error); } ?></strong></span></div>
+				</div>
 			</div>
 		</div>
+	</div>
 </body>
 </html>
