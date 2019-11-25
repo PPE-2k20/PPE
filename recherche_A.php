@@ -26,57 +26,10 @@
   $sizeLD=mysqli_num_rows($resultClientMax);
 
   if (isset($_POST['submitModal'])){
-    if ($_POST['prenom']){
-      $req = "UPDATE `client` SET `prenom`= \"".$_POST['prenom']."\" WHERE numero_client =".$_SESSION['numero_client'];
-      $resultRaisonSociale=mysqli_query($bdd,$req);
-    }
-    if ($_POST['nom']){
-      $req = "UPDATE `client` SET `nom`= \"".$_POST['nom']."\" WHERE numero_client =".$_SESSION['numero_client'];
-      $resultRaisonSociale=mysqli_query($bdd,$req);
-    }
-    if ($_POST['raison_sociale']){
-      $req = "UPDATE `client` SET `raison_sociale`= \"".$_POST['raison_sociale']."\" WHERE numero_client =".$_SESSION['numero_client'];
-      $resultRaisonSociale=mysqli_query($bdd,$req);
-    }
-    if ($_POST['siren']){
-      $req = "UPDATE `client` SET `siren`= \"".$_POST['siren']."\" WHERE numero_client =".$_SESSION['numero_client'];
-      $resultSiren=mysqli_query($bdd,$req); 
-    }
-    if ($_POST['code_ape']){ 
-      $req = "UPDATE `client` SET `code_APE`= \"".$_POST['code_ape']."\" WHERE numero_client =".$_SESSION['numero_client'];
-      $resultCodeAPE=mysqli_query($bdd,$req);  
-    }
-    if ($_POST['adresse']){ 
-      $req = "UPDATE `client` SET `adresse`= \"".$_POST['adresse']."\" WHERE numero_client =".$_SESSION['numero_client'];
-      $resultAdresse=mysqli_query($bdd,$req); 
-    }
-    if ($_POST['telephone']){ 
-      $req = "UPDATE `client` SET `telephone`= \"".$_POST['telephone']."\" WHERE numero_client =".$_SESSION['numero_client'];
-      $resultTelepone=mysqli_query($bdd,$req);   
-    }
-    if ($_POST['fax']){ 
-      $req = "UPDATE `client` SET `fax`= \"".$_POST['fax']."\" WHERE numero_client =".$_SESSION['numero_client'];
-      $resultFax=mysqli_query($bdd,$req);
-    }
-    if ($_POST['email']){ 
-      $req = "UPDATE `client` SET `email`= \"".$_POST['email']."\" WHERE numero_client =".$_SESSION['numero_client'];
-      $resultEmail=mysqli_query($bdd,$req);
-    }
-    if ($_POST['duree_deplacement']){ 
-      $req = "UPDATE `client` SET `duree_deplacement`= \"".$_POST['duree_deplacement']."\" WHERE numero_client =".$_SESSION['numero_client'];
-      $resultDureeDeplacement=mysqli_query($bdd,$req); 
-    }
-    if ($_POST['distance_km']){ 
-      $req = "UPDATE `client` SET `distance_km`= \"".$_POST['distance_km']."\" WHERE numero_client =".$_SESSION['numero_client'];
-      $resultDistanceKM=mysqli_query($bdd,$req);   
-    }
-    if ($_POST['numero_agence']){ 
-      $req = "UPDATE `client` SET `numero_agence`= \"".$_POST['numero_agence']."\" WHERE numero_client =".$_SESSION['numero_client'];
-      $resultDistanceKM=mysqli_query($bdd,$req);   
-    }
-    $reqRefresh = "SELECT * FROM client WHERE numero_client = ".$_SESSION['numero_client'];
-    $resultClient=mysqli_query($bdd,$reqRefresh); 
+    $req = "UPDATE `client` SET numero_client=\"".$_POST['numClient']."\", prenomC =\"".$_POST['prenom']."\" , nomC =\"".$_POST['nom']."\" ,raison_sociale =\"".$_POST['raison_sociale']."\" , siren =\"".$_POST['siren']."\", code_APE =\"".$_POST['code_ape']."\" , adresse =\"".$_POST['adresse']."\" , telephone =\"".$_POST['telephone']."\" , fax =\"".$_POST['fax']."\" , email =\"".$_POST['email']."\" , duree_deplacement =\"".$_POST['duree_deplacement']."\" ,distance_km =\"".$_POST['distance_km']."\" ,`numero_agence`= \"".$_POST['numero_agence']."\" WHERE numero_client =\"".$_SESSION['numero_client']."\"";
+    $result=mysqli_query($bdd,$req);   
   }
+  
   //inclusion de la connexion à la base de données
   include_once 'db_connect.php';
   //echo (mysqli_error($connexion_a_la_bdd));
@@ -111,8 +64,8 @@
       ?>
 
       <p>N°Client: <?php echo $affiche['numero_client']; ?></p>
-      <p>Prénom: <?php echo $affiche['prenom']; ?></p>
-      <p>Nom: <?php echo $affiche['nom']; ?></p>
+      <p>Prénom: <?php echo $affiche['prenomC']; ?></p>
+      <p>Nom: <?php echo $affiche['nomC']; ?></p>
       <p>Raison sociale: <?php echo $affiche['raison_sociale']; ?> </p>
       <p>Siren: <?php echo $affiche['siren']; ?></p>
       <p>Code APE: <?php echo $affiche['code_APE']; ?></p>
@@ -141,18 +94,19 @@
           <div class="modal-body" >
 
           <lo>
-            <li><input type="text" name="prenom" placeholder="Prénom"></li>
-            <li><input type="text" name="nom" placeholder="Nom"></li>            
-            <li><input type="text" name="raison_sociale" placeholder="Raison sociale"></li>
-            <li><input type="text" name="siren" placeholder="Siren"></li>
-            <li><input type="text" name="code_ape" placeholder="Code APE"></li>
-            <li><input type="text" name="adresse" placeholder="Adresse"></li>
-            <li><input type="text" name="telephone" placeholder="Téléphone"></li>
-            <li><input type="text" name="fax" placeholder="Fax"></li>
-            <li><input type="text" name="email" placeholder="Email"></li>
-            <li><input type="text" name="duree_deplacement" placeholder="Durée déplacement"></li>
-            <li><input type="text" name="distance_km" placeholder="Distance kilométrique"></li>
-            <li><input type="text" name="numero_agence" placeholder="n°Agence"></li>
+            <li>N°Client: <input type="text" name="numClient" placeholder="N°Client" value="<?php echo $affiche['numero_client']; ?>"></li>
+            <li>Prénom: <input type="text" name="prenom" placeholder="Prenom" value="<?php echo $affiche['prenomC']; ?>"></li>      
+            <li>Nom: <input type="text" name="nom" placeholder="Nom" value="<?php echo $affiche['nomC']; ?>"></li>       
+            <li>Raison sociale: <input type="text" name="raison_sociale" placeholder="Raison sociale" value="<?php echo $affiche['raison_sociale']; ?>"></li>
+            <li>Siren: <input type="text" name="siren" placeholder="Siren" value="<?php echo $affiche['siren']; ?>"></li>
+            <li>Code APE: <input type="text" name="code_ape" placeholder="Code APE" value="<?php echo $affiche['code_APE']; ?>"></li>
+            <li>Adresse: <input type="text" name="adresse" placeholder="Adresse" value="<?php echo $affiche['adresse']; ?>"></li>
+            <li>Téléphone: <input type="text" name="telephone" placeholder="Téléphone" value="<?php echo $affiche['telephone']; ?>"></li>
+            <li>Fax: <input type="text" name="fax" placeholder="Fax" value="<?php echo $affiche['fax']; ?>"></li>
+            <li>Email: <input type="text" name="email" placeholder="Email" value="<?php echo $affiche['email']; ?>"></li>
+            <li>Durée de déplacement: <input type="text" name="duree_deplacement" placeholder="Durée déplacement" value="<?php echo $affiche['duree_deplacement']; ?>"></li>
+            <li>Distance km: <input type="text" name="distance_km" placeholder="Distance kilométrique" value="<?php echo $affiche['distance_km']; ?>"></li>
+            <li>N°Agence: <input type="text" name="numero_agence" placeholder="n°Agence" value="<?php echo $affiche['numero_agence']; ?>"></li>
           </lo>         
              
           </div>
