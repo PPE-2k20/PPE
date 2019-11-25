@@ -1,6 +1,5 @@
 <?php
 	include_once 'db_connect.php';
-
 	$error = isset($_GET['error'])?$_GET['error']:"";
 ?>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">

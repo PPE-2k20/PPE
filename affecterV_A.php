@@ -3,7 +3,7 @@
   session_start();
 
   if (!isset ($_SESSION['login'])) {
-      header("location: index.php");
+      header("location: login.php");
       //Si une personne non connecter essaie d'acceder a la page il est renvoyé vers index.php
   }elseif ($_SESSION['statut']=="Technicien") {
       header("location: accueil_T.php");

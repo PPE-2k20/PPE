@@ -17,5 +17,5 @@ session_start();
 	// Finalement, on détruit la session.
 	session_destroy();
 
-    header("location: index.php");
+    header("location: login.php");
 ?>
