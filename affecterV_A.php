@@ -15,7 +15,7 @@
   if(isset($_POST['numClient']) and isset($_POST['submitAffecter'])){
     $numClient = $_POST['numClient'];
     $_SESSION['numClient'] = $numClient;
-    $ReqCodeRegAssis = "SELECT assistant.code_region FROM assistant, utilisateur WHERE  utilisateur.login = \"".$_SESSION['login']."\"";
+    $ReqCodeRegAssis = "SELECT assistant.code_region FROM assistant, utilisateur WHERE assistant.matricule = utilisateur.matricule and  utilisateur.login = \"".$_SESSION['login']."\"";
     $ResultCodeRegAssis = mysqli_query($bdd,$ReqCodeRegAssis);
     $CodeRegAssis = $ResultCodeRegAssis->fetch_array(MYSQLI_ASSOC);
     $reqNomT = "SELECT technicien.nom, technicien.prenom FROM technicien, client, agence, assistant WHERE client.numero_agence = technicien.numero_agence and technicien.numero_agence = agence.numero_agence and agence.code_region= assistant.code_region and numero_client =\"".$numClient."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\"";
