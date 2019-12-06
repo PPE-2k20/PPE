@@ -33,7 +33,7 @@ session_start();
   	<a href="recherche_A.php"/><center><button>Page de recherche</button></center></a>
   	<a href="affecterV_A.php"/><center><button>Affecter une visite</button></center></a>
   	<a href="consulteInter_A.php"/><center><button>Consulter les interventions</button></center></a>
-  	<a href="https://google.fr"/><center><button>Page 4</button></center></a>
+  	<a href="stat_A.php"/><center><button>Statistiques</button></center></a>
     <li><a href="logout.php">Déconnexion</a></li> 
   </body>
 </html> 
