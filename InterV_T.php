@@ -81,8 +81,7 @@ session_start();
       	</select>
         <input type="number" class="form-control" name="numMachine" id="numMachine" placeholder="Nombre de machine" min="1">
         <input type="number" name="total" value="0" hidden>
-        <button type="submit" class="btn btn-primary" name="valider1">Valider</button> 
-        <button type="submit" name="retour" onclick="Open()" class="btn btn-primary">Retour</button>
+        <button type="submit" id="btnVal2" class="btn btn-primary" name="valider1">Valider</button> 
       </div>
 
     <?php
@@ -90,8 +89,9 @@ session_start();
         ?>
             <script>
                 document.getElementById("divInter").setAttribute("hidden", true);
-                document.getElementById("intervention").setAttribute("readonly", <?php echo $_SESSION['intervention'] ?>);
-                document.getElementById("numMachine").setAttribute("readonly", <?php echo $_SESSION['numMachine'] ?>);
+                document.getElementById("intervention").setAttribute("disabled", true);
+                document.getElementById("numMachine").setAttribute("disabled", true);
+                document.getElementById("btnVal2").setAttribute("disabled", true);
             </script>
         <?php 
 
