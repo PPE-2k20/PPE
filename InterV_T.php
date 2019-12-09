@@ -9,7 +9,6 @@ session_start();
   }
 
   $bdd = mysqli_connect("localhost","root","","ppe");
-  $_SESSION['total'] = null;
 
   $reqMatTechnicien = "SELECT technicien.matricule FROM technicien, utilisateur WHERE technicien.matricule = utilisateur.matricule and utilisateur.login =\"".$_SESSION['login']."\"";
   $resultMatTechnicien = mysqli_query($bdd,$reqMatTechnicien);
@@ -18,21 +17,20 @@ session_start();
   $req = "SELECT intervention.*, client.* FROM intervention, client, technicien WHERE client.numero_client = intervention.numero_client and intervention.matricule_technicien=technicien.matricule and intervention.validation = 0 and technicien.matricule= \"".$matT['matricule']."\" ORDER BY numero_intervention asc";
   $result=mysqli_query($bdd,$req);
 
-  if(isset($_POST['valider1'])){
-      $_SESSION['total'] = $_POST['total'];
-      $_SESSION['numMachine'] = $_POST['numMachine'];
-      $_SESSION['intervention'] = $_POST['intervention'];
+    if(isset($_POST['valider1'])){
+        $_SESSION['total'] = $_POST['total'];
+        $_SESSION['numMachine'] = $_POST['numMachine'];
+        $_SESSION['intervention'] = $_POST['intervention'];
     }
 
     if(isset($_POST['valider2'])){
-      $_SESSION['total'] = $_SESSION['total'] + $_POST['ajouter'];
-      echo $_SESSION['total'] = $_SESSION['total'] + $_POST['ajouter'];
-    }
 
-    if(isset($_POST['numSerie'.$_SESSION['total']]) and isset($_POST['Commentaire'.$_SESSION['total']]) and isset($_POST['nbHeure'.$_SESSION['total']])){ 
-        $numSerie = $_POST["numSerie".$_SESSION['total']];
-        $Commentaire = $_POST['Commentaire'.$_SESSION['total']];
-        $nbHeure = $_POST['nbHeure'.$_SESSION['total']];
+      $_SESSION['total'] = $_SESSION['total'] + $_POST['ajouter']; 
+
+      if(isset($_POST['numSerie'.($_SESSION['total']-1)]) and isset($_POST['Commentaire'.($_SESSION['total']-1)]) and isset($_POST['nbHeure'.($_SESSION['total']-1)])){ 
+        $numSerie = $_POST["numSerie".($_SESSION['total']-1)];
+        $Commentaire = $_POST['Commentaire'.($_SESSION['total']-1)];
+        $nbHeure = $_POST['nbHeure'.($_SESSION['total']-1)];
 
         $infoInter = explode (" | ", $_SESSION['intervention']);
         $num_Inter = $infoInter[0];
@@ -48,13 +46,16 @@ session_start();
 
         $reqValidation = "UPDATE intervention SET Validation= 1 Where numero_intervention = \"".$num_Inter."\"";
         $result=mysqli_query($bdd,$reqValidation);
-
+        
         ?>
           <script>
-            document.location.href = './InterV_T.php';
+              document.location.href = './InterV_T.php';
           </script>
-      <?php   
-        }   
+        <?php 
+        }
+    }
+
+
 
   include_once 'db_connect.php';
 ?>
@@ -72,24 +73,28 @@ session_start();
 
   <body>
     <form id="form1" name="form1" method="post" action="">
-    <?php if(is_null($_SESSION['total'])){ ?>
-    	
-      	<select multiple class="form-control col-6" size = 5 name="intervention" id="intervention" required>
+      <div id = "divInter">
+      	<select multiple class="form-control col-6" size = 5 name="intervention" id="intervention">
           	<?php while ($affiche = $result -> fetch_array(MYSQLI_ASSOC)) {?>
           	    <option><?php echo $affiche['numero_intervention']." | ".$affiche['date_visite']." | ".$affiche['heure_visite']." | ".$affiche['nomC']." ".$affiche['prenomC']?></option>
          		 <?php } ?>
       	</select>
-        <input type="number" class="form-control" name="numMachine" id="numMachine" placeholder="Nombre de machine" min="1" required>
-        <input type="number" name="total" value="-1" hidden>
+        <input type="number" class="form-control" name="numMachine" id="numMachine" placeholder="Nombre de machine" min="1">
+        <input type="number" name="total" value="0" hidden>
         <button type="submit" class="btn btn-primary" name="valider1">Valider</button> 
         <button type="submit" name="retour" onclick="Open()" class="btn btn-primary">Retour</button>
-      </form>
-     <?php  
-        }        
-      ?>
+      </div>
 
-    <?php 
+    <?php
       if(isset($_POST['valider1']) || isset($_POST['valider2'])){
+        ?>
+            <script>
+                document.getElementById("divInter").setAttribute("hidden", true);
+                document.getElementById("intervention").setAttribute("readonly", <?php echo $_SESSION['intervention'] ?>);
+                document.getElementById("numMachine").setAttribute("readonly", <?php echo $_SESSION['numMachine'] ?>);
+            </script>
+        <?php 
+
         if($_SESSION['total'] < $_SESSION['numMachine']){?>
             <div class="form-group">
               <input type="number" class="form-control" name="<?php echo "numSerie".$_SESSION['total'] ?>" placeholder="Numéro de série" min="1" required>
