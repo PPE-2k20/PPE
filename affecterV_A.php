@@ -88,7 +88,8 @@
       <button type="submit" class="btn btn-primary" name="submitAffecter">Valider</button>  
       <button type="submit" class="btn btn-primary" onclick="Open()" id="retour" name="submitRetour">Retour</button>  
     </form>
-
+    
+    <button type="submit" onclick="location.href='accueil_A.php'" class="btn btn-primary">Accueil</button>
     <li><a href="logout.php">Déconnexion</a></li> 
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
