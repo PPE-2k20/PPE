@@ -1,41 +1,32 @@
 <?php 
 	session_start();
   if (!isset ($_SESSION['login'])) {
-    header("location: login.php");
+    header("location: index.php");
     //Si une personne non connecter essaie d'acceder a la page il est renvoyé vers index.php
   }elseif ($_SESSION['statut']=="Technicien") {
     header("location: accueil_T.php");
     //Si un technicien essaie d'acceder aux page assistant il est renvoyé vers la page technicien
   }
-
   $bdd = mysqli_connect("localhost","root","","ppe");
-
   $ReqCodeRegAssis = "SELECT assistant.code_region FROM assistant, utilisateur WHERE assistant.matricule = utilisateur.matricule and utilisateur.login = \"".$_SESSION['login']."\"";
   $ResultCodeRegAssis = mysqli_query($bdd,$ReqCodeRegAssis);
   $CodeRegAssis = $ResultCodeRegAssis->fetch_array(MYSQLI_ASSOC);
-
   $reqTechnicien= "SELECT technicien.nom, technicien.prenom FROM technicien, agence, assistant WHERE assistant.code_region = agence.code_region and technicien.numero_agence = agence.numero_agence and assistant.code_region = \"".$CodeRegAssis['code_region']."\"";
   $resultTechnicien = mysqli_query($bdd,$reqTechnicien);
-
   if(isset($_POST['valider'])){
   	if (isset($_POST['tech'])) {
 		  $infoTech = explode (" ", $_POST['tech']);
 		  $nom_technicien = $infoTech[0];
 		  $prenom_technicien = $infoTech[1];
-
 		  $reqMatTechnicien = "SELECT matricule FROM technicien WHERE prenom =\"".$prenom_technicien."\" and  nom =\"".$nom_technicien."\"";
 		  $resultMatTechnicien = mysqli_query($bdd,$reqMatTechnicien);
 		  $matT = $resultMatTechnicien ->fetch_array(MYSQLI_ASSOC);
-
-
 		  $req = "SELECT SEC_TO_TIME( SUM( TIME_TO_SEC(temps_passer) ) ) as temps FROM controler, intervention WHERE controler.numero_intervention = intervention.numero_intervention and MONTH(intervention.date_visite)= \"".$_POST['mois']."\" AND YEAR(intervention.date_visite) = YEAR(NOW()) and intervention.matricule_technicien = \"".$matT['matricule']."\"";
 		  $res = mysqli_query($bdd, $req);
 		  $resultTime = $res->fetch_array(MYSQLI_ASSOC);
-
 		  $reqK = "SELECT SUM(client.distance_km) as distance FROM intervention, client WHERE intervention.numero_client = client.numero_client and intervention.validation = 1 AND intervention.matricule_technicien = \"".$matT['matricule']."\" and MONTH(date_visite)= \"".$_POST['mois']."\" and YEAR(date_visite) = YEAR(NOW())";
 		  $resK = mysqli_query($bdd, $reqK);
 		  $resultK = $resK->fetch_array(MYSQLI_ASSOC);
-
 		  $reqNB = "SELECT COUNT(numero_intervention) as nbInter FROM `intervention` WHERE matricule_technicien = \"".$matT['matricule']."\" AND MONTH(intervention.date_visite)= \"".$_POST['mois']."\" AND YEAR(intervention.date_visite) = YEAR(NOW()) AND validation = 1";
 		  $resNB = mysqli_query($bdd, $reqNB);
 		  $resultNB = $resNB->fetch_array(MYSQLI_ASSOC);

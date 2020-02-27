@@ -1,7 +1,7 @@
 <?php
   session_start();
   if (!isset ($_SESSION['login'])) {
-    header("location: login.php");
+    header("location: index.php");
     //Si une personne non connecter essaie d'acceder a la page il est renvoyé vers index.php
   }elseif ($_SESSION['statut']=="Technicien") {
     header("location: accueil_T.php");
@@ -88,28 +88,41 @@
     </select>
 
     <form method="post" action =""> 
+      <button type="submit" class="btn btn-primary" name="Modifier" data-toggle="modal" data-target="#exampleModal">Modifier</button>
+    </form>
+
+    <?php 
+    if(isset($_POST['Visualiser']) and isset($_POST['intervention'])){ 
+        $infoInter = explode (" | ", $_POST['intervention']);
+        $num_Inter = $infoInter[0];
+
+        $reqVisualiser ="SELECT * FROM intervention WHERE intervention.numero_client = client.numero_client and  intervention.numero_intervention =\"".$num_Inter."\"";
+        $resultVisualiser = mysqli_query($bdd,$reqVisualiser);
+        $affiche2 = $resultVisualiser -> fetch_array(MYSQLI_ASSOC);
+      ?>
+
+      <script>
+        $( document ).ready(function() {
+          $('#Modal').modal('show')  
+        });
+      </script>
+
+        
+     
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Afficher l'intervention</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Modifier l'intervention</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
           </button>
           </div>
           <div class="modal-body" >
 
-          <lo>
-            <li><input type="text" name="prenomT" placeholder="Prénom du technicien" value=""></li>
-            <li><input type="text" name="nomT" placeholder="Nom du technicien" value=""></li>     
-            <li><input type="text" name="telT" placeholder="Téléphone du technicien" value=""></li>        
-            <li><input type="date" name="datevisite" value=""></li>
-            <li><input type="text" name="siren" placeholder="Heure" value=""></li>
-            <li><input type="text" name="numClient" placeholder="N°Client"></li>
-            <li><input type="text" name="prenomC" placeholder="Adresse"></li>
-            <li><input type="text" name="nomC" placeholder="Téléphone"></li>
-            <li><input type="text" name="adresseC" placeholder="Adresse du Client"></li>
-            <li><input type="text" name="telC" placeholder="Téléphone du client"></li>
+          <lo>        
+            <li><input type="date" name="datevisite" value="<?php echo $affiche2['date_visite'] ?>"></li>
+            <li><input type="text" name="siren" placeholder="Heure" value="<?php  echo $affiche2['heure_visite'] ?>"></li>
           </lo>         
              
           </div>
@@ -120,8 +133,9 @@
         </div>
       </div>
     </div>  
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Modifier</button>
-  </form>
+   <?php 
+      } 
+    ?> 
 
   <li><a href="logout.php">Déconnexion</a></li>
 

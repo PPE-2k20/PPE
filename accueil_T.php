@@ -1,7 +1,7 @@
 <?php  
 session_start();
   if (!isset ($_SESSION['login'])) {
-    header("location:login.php");
+    header("location:index.php");
     //Si une personne non connecter essaie d'acceder a la page il est renvoyé vers index.php
   }elseif ($_SESSION['statut']=="assistant") {
     header("location: accueil_T.php");
@@ -12,6 +12,7 @@ session_start();
   $nomA = "SELECT nom , prenom FROM utilisateur, technicien Where technicien.matricule = utilisateur.matricule and login =\"".$_SESSION['login']."\"";
   $reqNom = mysqli_query($bdd,$nomA);
   $affiche = $reqNom->fetch_array(MYSQLI_ASSOC);
+
 //inclusion de la connexion à la base de données
 include_once 'db_connect.php';
 //echo (mysqli_error($connexion_a_la_bdd));
