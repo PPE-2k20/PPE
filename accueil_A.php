@@ -40,9 +40,9 @@ session_start();
   	<a href="consulteInter_A.php"/><center><button>Consulter les interventions</button></center></a>
   	<a href="stat_A.php"/><center><button>Statistique</button></center></a>
 
-    <form method="post" action =""></form>
+    <form method="post" action ="">
      <button type="submit" class="btn btn-primary" name="Contrat" data-toggle="modal" data-target="#ModalA">Le nombre de contrat arrivant à la fin : <?php echo $afficheNbContrat['nbContrat']?></button>
-    
+    </form>
 
     <?php 
 
@@ -52,6 +52,12 @@ session_start();
         $resultContrat = mysqli_query($bdd, $reqContrat); 
 
       ?>
+
+      <script>
+        $( document ).ready(function() {
+          $('#ModalA').modal('show')  
+        });
+      </script>
 
       <div class="modal fade" id="ModalA" tabindex="-1" role="dialog" aria-labelledby="Modal" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -95,7 +101,7 @@ session_start();
   <?php
     }
   ?>
-
+  
     <li><a href="logout.php">Déconnexion</a></li> 
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

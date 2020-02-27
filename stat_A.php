@@ -69,7 +69,7 @@
 		</select>
 
 		<button type="submit" name="valider" class="btn btn-primary">Valider</button>
-		<a href="accueil_A.php" class="btn btn-primary" role="button">Accueil</a>
+		<button type="submit" onclick="location.href='accueil_A.php'" class="btn btn-primary">Accueil</button>
 		<br>
 		<br>
 		<?php if(isset($_POST['valider'])){ 

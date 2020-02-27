@@ -103,7 +103,7 @@ session_start();
             <div class="modal-footer">
               <input type="number" name="ajouter" value="1" hidden>
               <button type="submit" name="valider2" class="btn btn-primary">Valider</button>
-              <button type="submit" name="retour" onclick="Open()" class="btn btn-primary">Retour</button>
+              <button type="submit" onclick="location.href='InterV_T.php'" class="btn btn-primary">Retour</button>
             </div>
           <?php 
         } 
@@ -116,7 +116,7 @@ session_start();
         $infoInter = explode (" | ", $_POST['intervention']);
         $num_Inter = $infoInter[0];
 
-        $reqVisualiser ="SELECT * FROM intervention, client WHERE intervention.numero_client = client.numero_client and  intervention.numero_intervention =\"".$num_Inter."\"";
+        $reqVisualiser ="SELECT * FROM intervention, client WHERE intervention.numero_client = client.numero_client and intervention.numero_intervention =\"".$num_Inter."\"";
         $resultVisualiser = mysqli_query($bdd,$reqVisualiser);
         $affiche2 = $resultVisualiser -> fetch_array(MYSQLI_ASSOC);
       ?>
@@ -151,10 +151,5 @@ session_start();
         } 
       ?> 
 
-      <script>
-        function Open() {
-          document.location.href = './InterV_T.php';
-        }
-      </script>
    </body>
 </html>

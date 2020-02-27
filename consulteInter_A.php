@@ -67,8 +67,8 @@
          <?php } ?>
       </select>
       <input type="date" name="dateInter">
-      <button type="submit" class="btn btn-primary"  name="submitRechercheInter" class="">Valider</button>   
-    </form>
+      <button type="submit" class="btn btn-primary" id="ValiderInter" name="submitRechercheInter" class="">Valider</button>   
+    
 
     <select multiple class="form-control col-6" size = 5  name = "liste_inter" id = "search">
       <?php 
@@ -87,29 +87,32 @@
       ?>
     </select>
 
-    <form method="post" action =""> 
-      <button type="submit" class="btn btn-primary" name="Modifier" data-toggle="modal" data-target="#exampleModal">Modifier</button>
-    </form>
+    <div id = "divInter">
+      <button type="submit" class="btn btn-primary" name="Modifier" data-toggle="modal" data-target="#Modal1">Modifier</button>
+     </div>
+   </form>
+
+    
+    
+    
 
     <?php 
-    if(isset($_POST['Visualiser']) and isset($_POST['intervention'])){ 
-        $infoInter = explode (" | ", $_POST['intervention']);
+    if(isset($_POST['liste_inter']) and isset($_POST['Modifier'])){ 
+        $infoInter = explode (" | ", $_POST['liste_inter']);
         $num_Inter = $infoInter[0];
 
-        $reqVisualiser ="SELECT * FROM intervention WHERE intervention.numero_client = client.numero_client and  intervention.numero_intervention =\"".$num_Inter."\"";
-        $resultVisualiser = mysqli_query($bdd,$reqVisualiser);
-        $affiche2 = $resultVisualiser -> fetch_array(MYSQLI_ASSOC);
+        $reqModifier ="SELECT * FROM intervention , client WHERE intervention.numero_client = client.numero_client and  intervention.numero_intervention =\"".$num_Inter."\"";
+        $resultModifier = mysqli_query($bdd,$reqModifier);
+        $affiche2 = $resultModifier -> fetch_array(MYSQLI_ASSOC);
       ?>
 
       <script>
         $( document ).ready(function() {
-          $('#Modal').modal('show')  
+          $('#Modal1').modal('show')  
         });
       </script>
 
-        
-     
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="Modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -119,17 +122,13 @@
           </button>
           </div>
           <div class="modal-body" >
-
-          <lo>        
             <li><input type="date" name="datevisite" value="<?php echo $affiche2['date_visite'] ?>"></li>
-            <li><input type="text" name="siren" placeholder="Heure" value="<?php  echo $affiche2['heure_visite'] ?>"></li>
-          </lo>         
-             
+            <li><input type="text" name="siren" placeholder="Heure" value="<?php  echo $affiche2['heure_visite'] ?>"></li>     
+          </div>        
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            <button type="submit" class="btn btn-primary" name="submitModal">Valider</button>
           </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-              <button type="submit" class="btn btn-primary" name="submitModal">Valider</button>
-            </div>
         </div>
       </div>
     </div>  
@@ -137,6 +136,7 @@
       } 
     ?> 
 
+  <button type="submit" onclick="location.href='accueil_A.php'" class="btn btn-primary">Accueil</button>
   <li><a href="logout.php">Déconnexion</a></li>
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
