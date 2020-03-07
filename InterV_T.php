@@ -7,7 +7,15 @@ session_start();
     header("location: accueil_A.php");
     //Si un assistant essaie d'acceder aux page technicien il est renvoyé vers la page assistant
   }
-  $bdd = mysqli_connect("localhost","root","","ppe");
+
+  //inclusion de la connexion à la base de données
+  include_once 'db_connect.php';
+  //echo (mysqli_error($connexion_a_la_bdd));
+
+  $nomA = "SELECT nom , prenom FROM utilisateur, technicien Where technicien.matricule = utilisateur.matricule and login =\"".$_SESSION['login']."\"";
+  $reqNom = mysqli_query($bdd,$nomA);
+  $name = $reqNom->fetch_array(MYSQLI_ASSOC);
+
   $reqMatTechnicien = "SELECT technicien.matricule FROM technicien, utilisateur WHERE technicien.matricule = utilisateur.matricule and utilisateur.login =\"".$_SESSION['login']."\"";
   $resultMatTechnicien = mysqli_query($bdd,$reqMatTechnicien);
   $matT = $resultMatTechnicien ->fetch_array(MYSQLI_ASSOC);
@@ -48,68 +56,86 @@ session_start();
         <?php 
         }
     }
-
-  include_once 'db_connect.php';
 ?>
 
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Ca$hCa$h</title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <title>CashCash</title>
+    <meta charset="UTF-8">
+    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="css/util.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="icon" href="logo.ico" />
   </head>
 
   <body>
-    <form id="form1" name="form1" method="post" action="">
-      <div id = "divInter">
-        <select multiple class="form-control col-6" size = 5 name="intervention" id="intervention">
-            <?php while ($affiche = $result -> fetch_array(MYSQLI_ASSOC)) {?>
-                <option><?php echo $affiche['numero_intervention']." | ".$affiche['date_visite']." | ".$affiche['heure_visite']." | ".$affiche['nomC']." ".$affiche['prenomC']?></option>
-             <?php } ?>
-        </select>
+    <div class="container-contact100">
+      <div class="wrap-contact100">
+        <h2 style="text-align: center;">Intervention / Validation</h2>
+        <p align="center"><?php echo $name['nom']; ?> <?php echo $name['prenom']; ?></p><br>
+        
+            <form id="form1" name="form1" method="post" action="">
+              <div id = "divInter">
+                <select multiple class="form-control" size = 5 name="intervention" id="intervention" required>
+                    <?php while ($affiche = $result -> fetch_array(MYSQLI_ASSOC)) {?>
+                        <option><?php echo $affiche['numero_intervention']." | ".$affiche['date_visite']." | ".$affiche['heure_visite']." | ".$affiche['nomC']." ".$affiche['prenomC']?></option>
+                     <?php } ?>
+                </select><br>
+                <input type="number" class="form-control" name="numMachine" id="numMachine" placeholder="Nombre de machine" min="1">
+                <input type="number" name="total" value="0" hidden><br>
+                <button type="submit" id="btnVal2" class="btn btn-success" name="valider1">Valider</button>
+                <button type="submit" class="btn btn-success" name="Visualiser" data-toggle="modal" data-target="#exampleModal">Visualiser</button>
+              </div>
 
-        <input type="number" class="form-control" name="numMachine" id="numMachine" placeholder="Nombre de machine" min="1">
-        <input type="number" name="total" value="0" hidden>
-        <button type="submit" id="btnVal2" class="btn btn-primary" name="valider1">Valider</button>
-        <button type="submit" class="btn btn-primary" name="Visualiser" data-toggle="modal" data-target="#exampleModal">Visualiser</button>
-        <input type="button" onclick="location.href='logout.php' ;" name="btnRetour" class="btn btn-primary" value="Déconnexion" />
+            <?php
+              if(isset($_POST['valider1']) || isset($_POST['valider2'])){
+                ?>
+                  <script>
+                      document.getElementById("divInter").setAttribute("hidden", true);
+                      document.getElementById("intervention").setAttribute("disabled", true);
+                      document.getElementById("numMachine").setAttribute("disabled", true);
+                      document.getElementById("btnVal2").setAttribute("disabled", true);
+                  </script>
+                <?php
+                if($_SESSION['total'] < $_SESSION['numMachine']){?>
+                    <div class="form-group">
+                      <input type="number" class="form-control" name="<?php echo "numSerie".$_SESSION['total'] ?>" placeholder="Numéro de série" min="1" required>
+                    </div>
+                    <div class="form-group">
+                      <textarea class="form-control" name="<?php echo "Commentaire".$_SESSION['total'] ?>" rows="3" required ></textarea>
+                    </div>
+                    <div class="form-group">
+                      <input type="time" class="form-control" name="<?php echo "nbHeure".$_SESSION['total'] ?>" placeholder="Temps d'intervention" required >
+                    </div>
+                    <div class="modal-footer">
+                      <input type="number" name="ajouter" value="1" hidden>
+                      <button type="submit" name="valider2" class="btn btn-success">Valider</button>
+                      <button type="submit" onclick="location.href='InterV_T.php'" class="btn btn-success">Retour</button>
+                    </div>
+                  <?php
+                }
+              }
+            ?>
+            </form><br>
 
+          <!--<div class="row">
+            <div class="offset-md-0 col-4">
+              <button type="submit" onclick="location.href='accueil_T.php'" class="btn btn-success">Accueil</button>
+              <a href='accueil_T.php'><i class="fas fa-arrow-circle-left fa-3x"></i></a>
+          </div>-->
+
+          <div class="offset-lg-0">
+              <button class="btn btn-danger" onclick="location.href='logout.php'"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+          </div>
+        </div>
       </div>
-
-    <?php
-      if(isset($_POST['valider1']) || isset($_POST['valider2'])){
-        ?>
-          <script>
-              document.getElementById("divInter").setAttribute("hidden", true);
-              document.getElementById("intervention").setAttribute("disabled", true);
-              document.getElementById("numMachine").setAttribute("disabled", true);
-              document.getElementById("btnVal2").setAttribute("disabled", true);
-          </script>
-        <?php 
-        if($_SESSION['total'] < $_SESSION['numMachine']){?>
-            <div class="form-group">
-              <input type="number" class="form-control" name="<?php echo "numSerie".$_SESSION['total'] ?>" placeholder="Numéro de série" min="1" required>
-            </div>
-            <div class="form-group">
-              <textarea class="form-control" name="<?php echo "Commentaire".$_SESSION['total'] ?>" rows="3" required ></textarea>
-            </div>
-            <div class="form-group">
-              <input type="time" class="form-control" name="<?php echo "nbHeure".$_SESSION['total'] ?>" placeholder="Temps d'intervention" required >
-            </div>
-            <div class="modal-footer">
-              <input type="number" name="ajouter" value="1" hidden>
-              <button type="submit" name="valider2" class="btn btn-primary">Valider</button>
-              <button type="submit" onclick="location.href='InterV_T.php'" class="btn btn-primary">Retour</button>
-            </div>
-          <?php 
-        } 
-      }
-    ?> 
-    </form>
+    </div>
 
     <?php 
       if(isset($_POST['Visualiser']) and isset($_POST['intervention'])){ 
@@ -151,5 +177,8 @@ session_start();
         } 
       ?> 
 
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
    </body>
 </html>

@@ -15,7 +15,7 @@
 
         //on cherche l'utilisateur qui a cet identifiant
         $sql = "SELECT * FROM utilisateur where login='$login'";
-        $result = mysqli_query($connexion_a_la_bdd, $sql);
+        $result = mysqli_query($bdd, $sql);
         $row = mysqli_fetch_array($result);
 
         if ($row)
@@ -33,7 +33,7 @@
                 if ($row['statut']=="Technicien")
 
                 {
-                  header("location: accueil_T.php");
+                  header("location: interV_T.php");
                 }
 
                 if ($row['statut']=="Assistant")
