@@ -31,17 +31,16 @@
       $matT = $resultMatTechnicien ->fetch_array(MYSQLI_ASSOC);
 
       if($_POST['dateInter']!=""){
-        $reqInterv = "SELECT intervention.*, client.nomC, client.prenomC FROM intervention, client, technicien, assistant, agence WHERE client.numero_client = intervention.numero_client and intervention.matricule_technicien=technicien.matricule and technicien.numero_agence = agence.numero_agence and agence.code_region= assistant.code_region and intervention.validation = 0 and intervention.matricule_technicien=\"".$matT['matricule']."\" and intervention.date_visite = \"".$_POST['dateInter']."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\" ORDER BY intervention.numero_intervention asc";
+        $reqInterv = "SELECT intervention.*, client.* FROM intervention, client, technicien, assistant, agence WHERE client.numero_client = intervention.numero_client and intervention.matricule_technicien=technicien.matricule and technicien.numero_agence = agence.numero_agence and agence.code_region= assistant.code_region and intervention.validation = 0 and intervention.matricule_technicien=\"".$matT['matricule']."\" and intervention.date_visite = \"".$_POST['dateInter']."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\" ORDER BY intervention.numero_intervention asc";
         $resultReqInterv = mysqli_query($bdd,$reqInterv);
       }
 
       if($_POST['dateInter']==""){
-        $reqInterv = "SELECT intervention.*, client.nomC, client.prenomC FROM intervention,client, technicien, assistant, agence WHERE client.numero_client = intervention.numero_client and intervention.matricule_technicien=technicien.matricule and technicien.numero_agence = agence.numero_agence and agence.code_region= assistant.code_region and intervention.validation = 0 and  intervention.matricule_technicien=\"".$matT['matricule']."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\" ORDER BY intervention.numero_intervention asc";
+        $reqInterv = "SELECT intervention.*, client.* FROM intervention,client, technicien, assistant, agence WHERE client.numero_client = intervention.numero_client and intervention.matricule_technicien=technicien.matricule and technicien.numero_agence = agence.numero_agence and agence.code_region= assistant.code_region and intervention.validation = 0 and  intervention.matricule_technicien=\"".$matT['matricule']."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\" ORDER BY intervention.numero_intervention asc";
         $resultReqInterv = mysqli_query($bdd,$reqInterv);
       }
-
     }else if($_POST['rechercheT']=="" and $_POST['dateInter']!=""){
-      $reqInterv = "SELECT technicien.nom,technicien.prenom ,intervention.*, client.nomC, client.prenomC FROM intervention, client, technicien, assistant, agence WHERE client.numero_client = intervention.numero_client and intervention.matricule_technicien=technicien.matricule and technicien.numero_agence = agence.numero_agence and agence.code_region= assistant.code_region and intervention.validation = 0 and  intervention.date_visite = \"".$_POST['dateInter']."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\" ORDER BY intervention.numero_intervention asc";
+      $reqInterv = "SELECT technicien.* ,intervention.*, client.* FROM intervention, client, technicien, assistant, agence WHERE client.numero_client = intervention.numero_client and intervention.matricule_technicien=technicien.matricule and technicien.numero_agence = agence.numero_agence and agence.code_region= assistant.code_region and intervention.validation = 0 and  intervention.date_visite = \"".$_POST['dateInter']."\" and assistant.code_region =\"".$CodeRegAssis['code_region']."\" ORDER BY intervention.numero_intervention asc";
       $resultReqInterv = mysqli_query($bdd,$reqInterv);
     }
   }
@@ -55,32 +54,48 @@
     $infoInter = explode (" | ", $_POST['liste_inter']);
     $num_Inter = $infoInter[0];
 
-    $reqPDF = "SELECT * FROM intervention WHERE numero_intervention = \"".$num_Inter."\"";
-    $resultPDF = mysqli_query($bdd,$reqPDF);
-    $affichePDF = $resultPDF -> fetch_array(MYSQLI_ASSOC);
-
-    
-
-    $reqTechnicien = "SELECT technicien.nom , technicien.prenom FROM intervention, technicien WHERE  technicien.matricule = intervention.matricule_technicien and numero_intervention = \"".$num_Inter."\"";
+    $reqTechnicien = "SELECT technicien.nom FROM intervention, technicien WHERE  technicien.matricule = intervention.matricule_technicien and numero_intervention = \"".$num_Inter."\"";
     $resultTechnicien = mysqli_query($bdd,$reqTechnicien);
-    $afficheTechnicien = $resultTechnicien -> fetch_array(MYSQLI_ASSOC);
+    $afficheTech = $resultTechnicien -> fetch_array(MYSQLI_ASSOC);
 
-    $reqClient = "SELECT client.nomC , client.prenomC FROM intervention, client WHERE  client.numero_client = intervention.numero_client and numero_intervention = \"".$num_Inter."\"";
-    $resultClient = mysqli_query($bdd,$reqClient);
-    $afficheClient = $resultClient -> fetch_array(MYSQLI_ASSOC);
+    $_SESSION['nom'] = $afficheTech['nom'];
 
-    $_SESSION['affichePDF'] = $affichePDF;
+    $reqTechnicien = "SELECT intervention.heure_visite FROM intervention WHERE numero_intervention = \"".$num_Inter."\"";
+    $resultTechnicien = mysqli_query($bdd,$reqTechnicien);
+    $afficheHeure = $resultTechnicien -> fetch_array(MYSQLI_ASSOC);
 
-    $_SESSION['afficheTechnicien'] = $afficheTechnicien;
+    $_SESSION['heure_visite'] = $afficheHeure['heure_visite'];
 
-    $_SESSION['afficheClient'] = $afficheClient;
+    $reqTechnicien = "SELECT intervention.numero_client FROM intervention WHERE numero_intervention = \"".$num_Inter."\"";
+    $resultTechnicien = mysqli_query($bdd,$reqTechnicien);
+    $afficheClient = $resultTechnicien -> fetch_array(MYSQLI_ASSOC);
+
+    $_SESSION['numClient'] = $afficheClient['numero_client'];
+
+    $reqTechnicien = "SELECT intervention.date_visite FROM intervention WHERE numero_intervention = \"".$num_Inter."\"";
+    $resultTechnicien = mysqli_query($bdd,$reqTechnicien);
+    $afficheDate = $resultTechnicien -> fetch_array(MYSQLI_ASSOC);
+
+    $_SESSION['date_visite'] = $afficheDate['date_visite'];
 
     $reqTechnicien= "SELECT technicien.nom, technicien.prenom FROM technicien, agence, assistant WHERE assistant.code_region = agence.code_region and technicien.numero_agence = agence.numero_agence and assistant.code_region = \"".$CodeRegAssis['code_region']."\"";
-    $resultTechnicien = mysqli_query($bdd,$reqTechnicien);
+    $resultTechnicien = mysqli_query($bdd,$reqTechnicien); 
     ?>
 
-    <script type="text/javascript">window.open('pdf.php');</script>
-    
+      <script type="text/javascript">window.open('pdf.php');</script> 
+
+    <?php 
+  }
+
+  if((isset($_POST['boutonPDF']) or isset($_POST['Modifier'])) and !isset($_POST['liste_inter'])){
+    ?>
+    <script type="text/javascript"> alert("Veuillez sélectionner une intervention !");</script>
+    <?php
+  }
+
+  if(isset($_POST['submitRechercheInter']) and ($_POST['rechercheT']=="" and $_POST['dateInter']=="")){
+    ?>
+    <script type="text/javascript"> alert("Veuillez sélectionner un technicien / une date !");</script>
     <?php
   }
 ?>
@@ -109,26 +124,47 @@
         <form class="contact100-form validate-form" method="post" action="" autocomplete="off">
           <div class="row">
             <br>
-            <select name="rechercheT" class="form-control" id="rechercheT">
+            <select id="rechercheT" name="rechercheT" class="form-control">
               <option value="">--Choisir un technicien--</option>
               <?php while ($afficheT = $resultTechnicien -> fetch_array(MYSQLI_ASSOC)){?>
-                  <option><?php echo $afficheT['nom']." ".$afficheT['prenom'];?></option>
+                  <option value="<?php echo $afficheT['nom']." ".$afficheT['prenom'];?>"><?php echo $afficheT['nom']." ".$afficheT['prenom'];?></option>
                <?php } ?>
             </select>
           </div>
 
-          <div class="row">
+          <div class="row" id="dateInter">
             Date : <input type="date" class="form-control" name="dateInter">
           </div>
+
+            <?php if(isset($_POST['submitRechercheInter']) and ($_POST['rechercheT']!="" or $_POST['dateInter']!="")){?>
+              <script>      
+                document.getElementById("rechercheT").setAttribute("disabled", true);
+                document.getElementById("rechercheT").setAttribute("hidden", true);
+
+                document.getElementById("dateInter").setAttribute("disabled", true);
+                document.getElementById("dateInter").setAttribute("hidden", true);
+              </script>
+              <?php  
+              if(isset($_POST['rechercheT']) and $_POST['rechercheT']!=""){
+                echo "Technicien :"." ".$_POST['rechercheT']."<br/>";
+                  if($_POST['dateInter']!=""){
+                    echo "Date:"." ".$_POST['dateInter']."<br/>";
+                  }
+                }else if($_POST['rechercheT']=="" and $_POST['dateInter']!=""){
+                   echo "Date :"." ".$_POST['dateInter']."<br/>"; 
+                }
+              } 
+            ?>
 
           <br>
           <div class="row">
             <select multiple class="form-control col-12" size = 5  name = "liste_inter" id = "search">
               <?php 
               if(isset($_POST['rechercheT']) and $_POST['rechercheT']!=""){
+                $_SESSION['rechercheT'] = $_POST['rechercheT']; 
                   while($affiche = $resultReqInterv -> fetch_array(MYSQLI_ASSOC)){?>
                   <option><?php echo $affiche['numero_intervention']." | ".$affiche['date_visite']." | ".$affiche['heure_visite']." | ".$affiche['nomC']." ".$affiche['prenomC']?></option>
-                  <?php 
+                  <?php
                     } 
                   } 
               if($_POST['rechercheT']=="" and $_POST['dateInter']!=""){
@@ -139,36 +175,49 @@
               }          
               ?>
             </select>
+            
           </div>
+
           <br>
 
           <div class="row">
-            <div class="offset-md-0 col-3">
+            <div class="offset-md-4 col-3">
               <button type="submit" class="btn btn-success" id="ValiderInter" name="submitRechercheInter">Valider</button>
+            </div>
+          </div>
+
+          <div class="row">
+          <?php if(isset($_POST['submitRechercheInter']) and ($_POST['rechercheT']!="" or $_POST['dateInter']!="")){?>
+            <script>      
+              document.getElementById("ValiderInter").setAttribute("hidden", true);
+              document.getElementById("ValiderInter").setAttribute("disabled",true);
+            </script>
+
+            <div class="offset-md-0 col-3">
+              <button type="submit" class="btn btn-success" name="Modifier" data-toggle="modal" data-target="#Modal1">Modifier</button>
             </div>
 
             <div class="offset-md-1 col-3">
-              <div id = "divInter">
-                <button type="submit" class="btn btn-success" name="Modifier" data-toggle="modal" data-target="#Modal1">Modifier</button>
-              </div>
+              <button  type="submit" class="btn btn-success" name ="boutonPDF" >PDF</button>
             </div>
 
-            <div class="offset-md-2 col-3">
-              <button target="_blank" type="submit" href="pdf.php" class="btn btn-success" name ="boutonPDF" >PDF</button>
-            </div>
+            <div class="offset-md-1 col-3">
+              <button type="submit" class="btn btn-success" onclick="location.href ='./consulteInter_A.php'" id="retour" name="submitRetour">Retour</button> 
+            </div> 
+          <?php } ?>
 
           </div>
 
         <?php 
-        if(isset($_POST['liste_inter']) and isset($_POST['Modifier'])){ 
-            $infoInter = explode (" | ", $_POST['liste_inter']);
-            $num_Inter = $infoInter[0];
-            $_SESSION['num_Inter'] = $num_Inter;
+        if(isset($_POST['liste_inter'])  and isset($_POST['Modifier'])){ 
+          $infoInter = explode (" | ", $_POST['liste_inter']);
+          $num_Inter = $infoInter[0];
+          $_SESSION['num_Inter'] = $num_Inter;
 
-            $reqModifier ="SELECT * FROM intervention , client WHERE intervention.numero_client = client.numero_client and  intervention.numero_intervention =\"".$num_Inter."\"";
-            $resultModifier = mysqli_query($bdd,$reqModifier);
-            $affiche2 = $resultModifier -> fetch_array(MYSQLI_ASSOC);
-          ?>
+          $reqModifier ="SELECT * FROM intervention , client WHERE intervention.numero_client = client.numero_client and  intervention.numero_intervention =\"".$num_Inter."\"";
+          $resultModifier = mysqli_query($bdd,$reqModifier);
+          $affiche2 = $resultModifier -> fetch_array(MYSQLI_ASSOC);
+        ?>
 
           <script>
             $( document ).ready(function() {
@@ -180,7 +229,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Modifier l'intervention</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Modifier l'intervention n°<?php echo $num_Inter?></h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -197,19 +246,20 @@
             </div>
           </div>  
          <?php 
-            } 
+            $num_Inter = null;
+          }
           ?> 
         </form>
       <br>
       
        <div class="row">
-            <div class="offset-md-0 col-4">
-                <a href='accueil_A.php'><i class="fas fa-arrow-circle-left fa-3x"></i></a>
-            </div>
+          <div class="offset-md-0 col-4">
+              <a href='accueil_A.php'><i class="fas fa-arrow-circle-left fa-3x"></i></a>
+          </div>
 
-            <div class="offset-md-3 ">
-                <button class="btn btn-danger" onclick="location.href='logout.php'"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
-            </div>
+          <div class="offset-md-3">
+              <button class="btn btn-danger" onclick="location.href='logout.php'"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+          </div>
         </div>
 
     </div>

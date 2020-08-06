@@ -12,14 +12,13 @@ session_start();
   include_once 'db_connect.php';
   //echo (mysqli_error($connexion_a_la_bdd));
 
-  $nomA = "SELECT nom , prenom FROM utilisateur, assistant Where assistant.matricule = utilisateur.matricule and login =\"".$_SESSION['login']."\"";
+  $nomA = "SELECT nom , prenom, code_region FROM utilisateur, assistant Where assistant.matricule = utilisateur.matricule and login =\"".$_SESSION['login']."\"";
   $reqNom = mysqli_query($bdd,$nomA);
   $affiche = $reqNom->fetch_array(MYSQLI_ASSOC);
 
-  $reqNbContrat = "SELECT COUNT(*) AS nbContrat FROM contrat_maintenance WHERE DATEDIFF(date_echeance,CURRENT_DATE) < 31";
+  $reqNbContrat = "SELECT COUNT(*) AS nbContrat FROM contrat_maintenance,client, agence, assistant WHERE DATEDIFF(date_echeance,CURRENT_DATE) < 31 and DATEDIFF(date_echeance,CURRENT_DATE) > 0  and contrat_maintenance.numero_client = client.numero_client and client.numero_agence = agence.numero_agence and agence.code_region = assistant.code_region and assistant.code_region = \"".$affiche['code_region']."\"";
   $resultNbContrat = mysqli_query($bdd, $reqNbContrat);
   $afficheNbContrat = $resultNbContrat -> fetch_array(MYSQLI_ASSOC);
-
 ?>
 
 <!DOCTYPE html>
@@ -70,7 +69,7 @@ session_start();
 
             if(isset($_POST['Contrat'])){ 
 
-              $reqContrat = "SELECT client.*, contrat_maintenance.* FROM contrat_maintenance, client WHERE contrat_maintenance.numero_client = client.numero_client and DATEDIFF(date_echeance,CURRENT_DATE) < 31";
+              $reqContrat = "SELECT client.*, contrat_maintenance.* FROM contrat_maintenance,client, agence, assistant WHERE DATEDIFF(date_echeance,CURRENT_DATE) < 31 and DATEDIFF(date_echeance,CURRENT_DATE) > 0  and contrat_maintenance.numero_client = client.numero_client and client.numero_agence = agence.numero_agence and agence.code_region = assistant.code_region and assistant.code_region = \"".$affiche['code_region']."\"";
               $resultContrat = mysqli_query($bdd, $reqContrat); 
 
             ?>
@@ -101,9 +100,11 @@ session_start();
                       </thead>
                       <tbody>
                         <?php while($afficheContrat = $resultContrat -> fetch_array(MYSQLI_ASSOC)){?>
-                          <td><?php echo $afficheContrat['nomC'] ?></td>
-                          <td><?php echo $afficheContrat['prenomC'] ?></td>
-                          <td><?php echo $afficheContrat['numero_contrat'] ?></td>
+                          <tr>
+                            <td><?php echo $afficheContrat['nomC'] ?></td>
+                            <td><?php echo $afficheContrat['prenomC'] ?></td>
+                            <td><?php echo $afficheContrat['numero_contrat'] ?></td>
+                          </tr>
                       <?php 
                         }
                       ?>

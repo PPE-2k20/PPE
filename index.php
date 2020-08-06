@@ -49,17 +49,17 @@
 					   		</div>
 						</form>
 					</div>
-
+				<?php if ($error == "Mauvais mot de passe veuillez reessayer" or $error == "Utilisateur inconnu veuillez reessayer") { ?>
 					<script type="text/javascript">
 						setTimeout(function() {
 						    $('#mydiv').fadeOut('slow');
 						}, 2000);
 					</script>	
 
-					<div class="offset-md-1 col-10" id="mydiv">
-						<span class="text-black" style="padding:10px; color:red;"><strong><?php if (isset($error)) { echo utf8_encode($error); } ?></strong></span>
+					<div class="offset-md-1 col-12" id="mydiv">
+						<span class="text-black" style="padding:10px; color:red;"><strong><?php echo utf8_encode($error); ?></strong></span>
 					</div>
-				
+				<?php } ?>
 				</div>
 			</div>
 		</div>

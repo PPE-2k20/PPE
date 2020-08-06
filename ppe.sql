@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  Dim 17 nov. 2019 à 18:06
+-- Généré le :  lun. 09 mars 2020 à 13:00
 -- Version du serveur :  5.7.26
 -- Version de PHP :  7.2.18
 
@@ -38,14 +38,15 @@ CREATE TABLE IF NOT EXISTS `agence` (
   `code_region` int(11) NOT NULL,
   PRIMARY KEY (`numero_agence`),
   KEY `FK1` (`code_region`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `agence`
 --
 
 INSERT INTO `agence` (`numero_agence`, `nom`, `adresse`, `telephone`, `fax`, `code_region`) VALUES
-(1, 'Cashcash Lille ', '35 rue de la place', '0602588255', '0323258230', 1);
+(1, 'Cashcash Lille ', '35 rue de la place', '0602588255', '0323258230', 1),
+(2, 'Roubaix', '15 rue de la drogue!', '28007494', '0447047847', 1);
 
 -- --------------------------------------------------------
 
@@ -81,8 +82,8 @@ INSERT INTO `assistant` (`matricule`, `nom`, `prenom`, `adresse`, `date_embauche
 DROP TABLE IF EXISTS `client`;
 CREATE TABLE IF NOT EXISTS `client` (
   `numero_client` int(11) NOT NULL AUTO_INCREMENT,
-  `prenom` varchar(50) NOT NULL,
-  `nom` varchar(50) NOT NULL,
+  `prenomC` varchar(50) NOT NULL,
+  `nomC` varchar(50) NOT NULL,
   `raison_sociale` varchar(255) NOT NULL,
   `siren` varchar(255) NOT NULL,
   `code_APE` varchar(255) NOT NULL,
@@ -101,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `client` (
 -- Déchargement des données de la table `client`
 --
 
-INSERT INTO `client` (`numero_client`, `prenom`, `nom`, `raison_sociale`, `siren`, `code_APE`, `adresse`, `telephone`, `fax`, `email`, `duree_deplacement`, `distance_km`, `numero_agence`) VALUES
+INSERT INTO `client` (`numero_client`, `prenomC`, `nomC`, `raison_sociale`, `siren`, `code_APE`, `adresse`, `telephone`, `fax`, `email`, `duree_deplacement`, `distance_km`, `numero_agence`) VALUES
 (1, 'Gerard', 'Dupont', '  ', '458451484', 'pipi', '2 rue de la paix', '06055285233', '0335282005', 'marc@gmail.fr', '15', 10, 1),
 (2, 'Laurent', 'FranÃ§ois', '   ', 'ghf58', 'gfj5285248', '20 rue de Lille', '060258566', '031589435', 'eric@orange.fr', '45', 50, 2);
 
@@ -121,7 +122,15 @@ CREATE TABLE IF NOT EXISTS `contrat_maintenance` (
   PRIMARY KEY (`numero_contrat`),
   KEY `FK1` (`numero_client`),
   KEY `FK2` (`refTypeContrat`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `contrat_maintenance`
+--
+
+INSERT INTO `contrat_maintenance` (`numero_contrat`, `date_signature`, `date_echeance`, `numero_client`, `refTypeContrat`) VALUES
+(1, '2020-01-01', '2020-03-31', 1, 'Aucun'),
+(2, '2020-01-01', '2020-03-31', 2, 'Aucun');
 
 -- --------------------------------------------------------
 
@@ -146,7 +155,9 @@ CREATE TABLE IF NOT EXISTS `controler` (
 
 INSERT INTO `controler` (`numero_serie`, `numero_intervention`, `temps_passer`, `commentaire`) VALUES
 (1, 1, '1h30', 'izi'),
-(1, 2, '1h30', 'izi');
+(1, 2, '1h30', 'izi'),
+(666, 16, '12:06', 'Satanas'),
+(12, 19, '12:30', 'gznui');
 
 -- --------------------------------------------------------
 
@@ -191,7 +202,7 @@ CREATE TABLE IF NOT EXISTS `intervention` (
   PRIMARY KEY (`numero_intervention`),
   KEY `FK1` (`matricule_technicien`),
   KEY `FK_NumClient` (`numero_client`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `intervention`
@@ -199,15 +210,47 @@ CREATE TABLE IF NOT EXISTS `intervention` (
 
 INSERT INTO `intervention` (`numero_intervention`, `date_visite`, `heure_visite`, `matricule_technicien`, `numero_client`, `validation`) VALUES
 (1, '2019-11-12', '12h30', 'MT01', 1, 1),
-(4, '2019-11-13', '18h15', 'MT01', 2, 0),
+(4, '2019-11-13', '18h15', 'MT01', 2, 1),
 (2, '2019-11-08', '16h', 'MT01', 2, 1),
-(3, '2019-11-26', '15h', 'MT01', 1, 0),
-(5, '2019-11-20', '18h15', 'MT01', 2, 0),
-(6, '2019-11-20', '8h15', 'MT01', 1, 0),
-(7, '2019-11-28', '5h', 'MT01', 1, 0),
-(8, '2019-11-28', '5h', 'MT01', 1, 0),
-(9, '2019-11-13', '18h15', 'MT01', 1, 0),
-(10, '2019-11-17', '14h30', 'MT02', 1, 0);
+(3, '2019-11-26', '15h', 'MT01', 1, 1),
+(5, '2019-11-20', '18h15', 'MT01', 2, 1),
+(6, '2019-11-20', '8h15', 'MT01', 1, 1),
+(7, '2019-11-28', '5h', 'MT01', 1, 1),
+(8, '2019-11-28', '5h', 'MT01', 1, 1),
+(9, '2019-11-13', '18h15', 'MT01', 1, 1),
+(10, '2019-11-17', '14h30', 'MT02', 1, 1),
+(11, '2020-03-07', '10:20', 'MT01', 1, 1),
+(12, '2020-03-07', '10:20', 'MT01', 1, 1),
+(13, '2020-03-07', '10:00', 'MT01', 1, 1),
+(16, '2020-03-20', '12:30', 'MT01', 1, 1),
+(17, '2020-03-09', '14:50', 'MT01', 1, 1),
+(18, '2020-03-10', '12:37', 'MT01', 1, 1),
+(19, '2020-03-10', '10:30', 'MT01', 1, 1),
+(20, '2020-03-10', '13:00', 'MT03', 2, 0),
+(21, '2020-03-10', '12:30', 'MT02', 1, 1),
+(22, '2020-03-10', '15:30', 'MT01', 1, 1),
+(23, '2020-03-10', '13:10', 'MT01', 1, 1),
+(24, '2020-03-10', '13:30', 'MT01', 1, 1),
+(25, '2020-03-10', '13:35', 'MT01', 1, 1),
+(26, '2020-03-19', '15:30', 'MT01', 1, 1),
+(27, '2020-03-11', '15:30', 'MT01', 1, 1),
+(28, '2020-03-25', '17:42', 'MT01', 1, 0);
+
+--
+-- Déclencheurs `intervention`
+--
+DROP TRIGGER IF EXISTS `verif_Inter`;
+DELIMITER $$
+CREATE TRIGGER `verif_Inter` BEFORE INSERT ON `intervention` FOR EACH ROW BEGIN
+          SET @b = (SELECT count(*) FROM intervention WHERE numero_client = NEW.numero_client AND validation = 0);
+          if @b >= 1 THEN 
+          begin 
+         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le client à déjà une intervention en cours';
+         end;
+         end if;
+      END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -276,7 +319,8 @@ CREATE TABLE IF NOT EXISTS `technicien` (
 
 INSERT INTO `technicien` (`matricule`, `nom`, `prenom`, `adresse`, `date_embauche`, `telephone`, `qualification`, `date_obtention`, `numero_agence`) VALUES
 ('MT01', 'Chassaing', 'Julien', '69 rue du Cul', '2019-10-01', '06050402', 'Aucune', '2019-05-06', 1),
-('MT02', 'Caron', 'Michel', '20 rue de la rue', '2018-12-25', '0604282561', 'bts', '2018-02-12', 1);
+('MT02', 'Caron', 'Michel', '20 rue de la rue', '2018-12-25', '0604282561', 'bts', '2018-02-12', 1),
+('MT03', 'Yaffa', 'Elie', '15 rue des ratpi\'s', '2020-03-02', '695892892', 'BTHESS', '2020-03-01', 2);
 
 -- --------------------------------------------------------
 
@@ -322,15 +366,15 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
   `matricule` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `matricule` (`matricule`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `utilisateur`
 --
 
 INSERT INTO `utilisateur` (`id`, `login`, `mdp`, `statut`, `matricule`) VALUES
-(1, 'test', 'test', 'Technicien', 'MT01'),
-(2, 'test1', 'test1', 'Assistant', 'MA01');
+(1, 'test', '06a5495508fbdc4a7fb5e0794755926d', 'Technicien', 'MT01'),
+(2, 'test1', 'f6480edf9cdcac82562df9843128c571', 'Assistant', 'MA01');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

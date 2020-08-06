@@ -5,4 +5,5 @@
 	$password = "";
 	$nom_db = "ppe";
 	$bdd = mysqli_connect($host, $user, $password, $nom_db) or die("Error " . mysqli_error($con));
+
 ?>
